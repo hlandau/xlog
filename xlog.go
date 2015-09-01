@@ -31,6 +31,7 @@ func New(name string) (Logger, Site) {
 	log := &logger{
 		parent:      rootLogger,
 		maxSeverity: SevTrace,
+    name:        name,
 	}
 
 	loggers[name] = log
