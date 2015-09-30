@@ -7,11 +7,19 @@ import "fmt"
 
 // Sink which writes each log message on a line to an io.Writer.
 type WriterSink struct {
-	w io.Writer
+	w           io.Writer
+	minSeverity Severity
 }
 
 func NewWriterSink(w io.Writer) *WriterSink {
-	return &WriterSink{w}
+	return &WriterSink{
+		w:           w,
+		minSeverity: SevDebug,
+	}
+}
+
+func (ws *WriterSink) SetSeverity(sev Severity) {
+	ws.minSeverity = sev
 }
 
 func (ws *WriterSink) ReceiveLocally(sev Severity, format string, params ...interface{}) {
@@ -19,6 +27,10 @@ func (ws *WriterSink) ReceiveLocally(sev Severity, format string, params ...inte
 }
 
 func (ws *WriterSink) ReceiveFromChild(sev Severity, format string, params ...interface{}) {
+	if sev > ws.minSeverity {
+		return
+	}
+
 	msg := ws.prefix(sev) + fmt.Sprintf(format, params...) + "\n"
 	io.WriteString(ws.w, msg)
 }

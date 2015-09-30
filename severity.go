@@ -3,7 +3,6 @@ package xlog
 type Severity int
 
 const (
-	SevNone      Severity = -1
 	SevEmergency Severity = iota
 	SevAlert
 	SevCritical
@@ -13,6 +12,7 @@ const (
 	SevInfo
 	SevDebug
 	SevTrace
+	SevNone Severity = -1
 )
 
 var severityString = map[Severity]string{
@@ -42,4 +42,11 @@ func (severity Severity) String() string {
 func ParseSeverity(severity string) (Severity, bool) {
 	s, ok := severityValue[severity]
 	return s, ok
+}
+
+func (severity Severity) Syslog() Severity {
+	if severity > SevDebug {
+		return SevDebug
+	}
+	return severity
 }

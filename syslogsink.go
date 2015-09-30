@@ -16,12 +16,20 @@ type Syslogger interface {
 
 // A sink that logs to a "log/syslog".Writer-like interface.
 type SyslogSink struct {
-	s Syslogger
+	s           Syslogger
+	minSeverity Severity
 }
 
 // Create a new syslog sink. "log/syslog".Writer implements Syslogger.
 func NewSyslogSink(syslogger Syslogger) *SyslogSink {
-	return &SyslogSink{syslogger}
+	return &SyslogSink{
+		s:           syslogger,
+		minSeverity: SevDebug,
+	}
+}
+
+func (ss *SyslogSink) SetSeverity(sev Severity) {
+	ss.minSeverity = sev
 }
 
 func (ss *SyslogSink) ReceiveLocally(sev Severity, format string, params ...interface{}) {
@@ -29,6 +37,10 @@ func (ss *SyslogSink) ReceiveLocally(sev Severity, format string, params ...inte
 }
 
 func (ss *SyslogSink) ReceiveFromChild(sev Severity, format string, params ...interface{}) {
+	if sev > ss.minSeverity {
+		return
+	}
+
 	s := fmt.Sprintf(format, params...)
 	switch sev {
 	case SevEmergency:

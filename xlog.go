@@ -31,7 +31,7 @@ func New(name string) (Logger, Site) {
 	log := &logger{
 		parent:      rootLogger,
 		maxSeverity: SevTrace,
-    name:        name,
+		name:        name,
 	}
 
 	loggers[name] = log
@@ -60,6 +60,7 @@ var rootLogger = &logger{
 	maxSeverity: SevTrace,
 }
 
+// The root logger.
 var Root Site = rootLogger
 
 // The sink which is used by default by the root logger.
