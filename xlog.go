@@ -30,18 +30,18 @@ var loggers = map[string]*logger{}
 // The name of the logger is formed by appending the name given to the name
 // of the parent logger and ".". If site is nil, behaves like New().
 func NewUnder(name string, site Site) (Logger, Site) {
-  if site == nil {
-    return New(name)
-  }
+	if site == nil {
+		return New(name)
+	}
 
-  sink, ok := site.(Sink)
-  if !ok {
-    panic("site does not implement sink")
-  }
+	sink, ok := site.(Sink)
+	if !ok {
+		panic("site does not implement sink")
+	}
 
-  l, s := New(site.Name() + "." + name)
-  s.SetSink(sink)
-  return l, s
+	l, s := New(site.Name() + "." + name)
+	s.SetSink(sink)
+	return l, s
 }
 
 // Creates a new logger.

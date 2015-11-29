@@ -4,7 +4,6 @@ import "os"
 import "io"
 import "time"
 import "fmt"
-import "github.com/mattn/go-isatty"
 import "github.com/shiena/ansicolor"
 
 // Sink which writes each log message on a line to an io.Writer.
@@ -33,17 +32,6 @@ func NewWriterSink(w io.Writer) *WriterSink {
 	}
 
 	return ws
-}
-
-func isTerminal(w io.Writer) bool {
-	wf, ok := w.(interface {
-		Fd() uintptr
-	})
-	if !ok {
-		return false
-	}
-
-	return isatty.IsTerminal(wf.Fd())
 }
 
 func (ws *WriterSink) SetSeverity(sev Severity) {
