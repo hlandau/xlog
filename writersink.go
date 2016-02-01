@@ -8,6 +8,8 @@ import "github.com/shiena/ansicolor"
 
 // Sink which writes each log message on a line to an io.Writer.
 type WriterSink struct {
+	Systemd bool // Use systemd-format output: "<3>some-log-message"
+
 	w              io.Writer
 	minSeverity    Severity
 	isTerminal     bool
@@ -17,7 +19,7 @@ type WriterSink struct {
 func NewWriterSink(w io.Writer) *WriterSink {
 	ws := &WriterSink{
 		w:           w,
-		minSeverity: SevDebug,
+		minSeverity: SevTrace,
 		isTerminal:  isTerminal(w),
 	}
 
@@ -52,6 +54,10 @@ func (ws *WriterSink) ReceiveFromChild(sev Severity, format string, params ...in
 }
 
 func (ws *WriterSink) prefix(sev Severity) string {
+	if ws.Systemd {
+		return fmt.Sprintf("<%d>", sev.Syslog())
+	}
+
 	return fmt.Sprintf("%s [%s] ", time.Now().Format("20060102150405"), ws.severityString[sev])
 }
 
