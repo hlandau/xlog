@@ -21,7 +21,7 @@ type Site interface {
 var loggersMutex sync.RWMutex
 var loggers = map[string]*logger{}
 
-// Creates a logger which is subordinate to another logger.
+// NewUnder creates a logger which is subordinate to another logger.
 //
 // All log messages will be forwarded through the parent logger, meaning that
 // any filtration or forwarding settings set on the parent logger will
@@ -44,7 +44,7 @@ func NewUnder(name string, site Site) (Logger, Site) {
 	return l, s
 }
 
-// Creates a new logger.
+// New creates a new logger.
 //
 // While there are no particular restrictions on facility names, the preferred
 // convention for the facility name is a dot-separated hierarchy of words
@@ -82,9 +82,9 @@ func New(name string) (Logger, Site) {
 	return Logger{log}, log
 }
 
-// Like New, but the created logger by default doesn't output anything but the
-// most severe errors. Intended for use by libraries so that consuming code
-// needs to opt in to log output by that library.
+// NewQuiet is like New, but the created logger by default doesn't output
+// anything but the most severe errors. Intended for use by libraries so that
+// consuming code needs to opt in to log output by that library.
 func NewQuiet(name string) (Logger, Site) {
 	l, s := New(name)
 	s.SetSeverity(SevCritical)
@@ -114,10 +114,10 @@ var rootLogger = &logger{
 	maxSeverity: SevTrace,
 }
 
-// The root logger.
+// Root is the root logger.
 var Root Site = rootLogger
 
-// The sink which is used by default by the root logger.
+// RootSink is the sink that is used by default by the root logger.
 var RootSink MultiSink
 
 func (l *logger) Name() string {
@@ -158,7 +158,7 @@ func (l *logger) localPrefix() string {
 	return ""
 }
 
-// Calls a function for every Site which has been created.
+// VisitSites calls a function for every Site which has been created.
 //
 // Do not attempt to create new loggers from the callback.
 func VisitSites(siteFunc func(s Site) error) error {
