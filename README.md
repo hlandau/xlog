@@ -1,6 +1,6 @@
 # xlog
 
-[![godocs.io](https://godocs.io/github.com/hlandau/xlog?status.svg)](https://godocs.io/github.com/hlandau/xlog) [![No modules](https://www.devever.net/~hl/f/no-modules2.svg) 100% modules-free.](https://www.devever.net/~hl/gomod)
+[![godocs.io](https://godocs.io/github.com/hlandau/xlog?status.svg)](https://godocs.io/github.com/hlandau/xlog)
 
 Yet another logging package for Go.
 
